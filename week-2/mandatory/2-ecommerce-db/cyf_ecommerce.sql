@@ -103,3 +103,68 @@ INSERT INTO order_items (order_id, product_id, quantity) VALUES(8, 5, 1);
 INSERT INTO order_items (order_id, product_id, quantity) VALUES(9, 13, 2);
 INSERT INTO order_items (order_id, product_id, quantity) VALUES(10, 14, 1);
 INSERT INTO order_items (order_id, product_id, quantity) VALUES(10, 6, 5);
+
+
+
+
+--Retrieve all the customers names and addresses who lives in United States
+select c2.address , c2."name" from customers c2 where c2.country = 'United States';
+
+--Retrieve all the customers ordered by ascending name
+select * from customers c order by c."name" asc;
+
+--Retrieve all the products which cost more than 100
+select * from products p where p.unit_price > 100;
+
+--Retrieve all the products whose name contains the word socks
+select * from products p3 where p3.product_name like '%socks';
+
+--Retrieve the 5 most expensive products
+select * from products p3 order by p3.unit_price desc limit 5;
+
+--Retrieve all the products with their corresponding suppliers. 
+--The result should only contain the columns product_name, unit_price and supplier_name
+select p.product_name , p.unit_price , s.supplier_name from products p 
+join suppliers s on s.id = p.supplier_id; 
+
+--Retrieve all the products sold by suppliers based in the United Kingdom. 
+--The result should only contain the columns product_name and supplier_name.
+select p.product_name , s.supplier_name from products p 
+join suppliers s on p.supplier_id = s.id 
+where country = 'United Kingdom';
+
+--Retrieve all orders from customer ID 1
+select * from orders o 
+join customers c on c.id = o.customer_id 
+where c.id = 1;
+
+--Retrieve all orders from customer named Hope Crosby
+select * from orders o 
+join customers c on c.id = o.customer_id 
+where c."name" = 'Hope Crosby';
+
+--Retrieve all the products in the order ORD006. The result should 
+--only contain the columns product_name, unit_price and quantity.
+select p2.product_name , p2.unit_price , oi.quantity from orders o 
+join order_items oi on oi.order_id = o.id 
+join products p2 on oi.product_id = p2.id 
+where o.order_reference = 'ORD006';
+
+--Retrieve all the products with their supplier for all orders of all customers. 
+--The result should only contain the columns name (from customer), 
+--order_reference order_date, product_name, supplier_name and quantity.
+select c."name" , o2.order_reference , o2.order_date , p.product_name , s.supplier_name , oi.quantity 
+from products p 
+join order_items oi on oi.product_id = p.id 
+join orders o2 on oi.order_id = o2.id 
+join suppliers s on s.id = p.supplier_id
+join customers c on o2.customer_id = c.id ;
+
+--Retrieve the names of all customers who bought a product from a supplier from China.
+select distinct c."name" from customers c 
+join orders o ON c.id = o.customer_id 
+join order_items oi on o.id = oi.order_id 
+join products p on oi.product_id = p.id 
+join suppliers s on p.supplier_id = s.id 
+where s.country = 'China';
+
